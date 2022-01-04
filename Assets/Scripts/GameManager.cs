@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
         {
             gameOverUI.SetActive(true);
         }
-        if (isGameOver == true && SwipeManager.tap)
+        if (isGameOver == true && Input.GetMouseButtonDown(0))
         {
             SceneManager.LoadScene("SampleScene");
         }
