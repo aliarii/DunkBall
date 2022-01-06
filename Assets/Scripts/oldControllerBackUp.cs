@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class oldControllerBackUp : MonoBehaviour
 {
     [SerializeField] GameObject groundObject;
     [SerializeField] ParticleSystem groundParticle;
@@ -14,10 +14,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float groundForce;
     [SerializeField] float smoothSwipe;
     [SerializeField] float initialAngle;
-    Vector2 mouseStartPos;
-    Vector2 mouseEndPos;
-    Vector3 ballStartPos;
-    Vector2 mousePosDiff;
+    Vector2 startPos;
+    Vector2 endPos;
+    Vector2 posDiff;
     Rigidbody ballRb;
     Collider groundCollider;
     bool addForce;
@@ -28,86 +27,62 @@ public class PlayerController : MonoBehaviour
     {
         canShoot = false;
         canJump = true;
-        addForce = true;
-        mousePosDiff = mouseEndPos = mouseStartPos = Vector2.zero;
-        ballStartPos = Vector3.zero;
         ballRb = GetComponentInChildren<Rigidbody>();
+        addForce = true;
         cameraFollowObject.position = new Vector3(moveBall.position.x + followOfset.x, cameraFollowObject.position.y, moveBall.position.z + followOfset.z);
         groundCollider = groundObject.gameObject.GetComponent<Collider>();
     }
 
     void Update()
     {
+        cameraFollowObject.position = new Vector3(moveBall.position.x + followOfset.x, cameraFollowObject.position.y, moveBall.position.z + followOfset.z);
+        moveBall.LookAt(basket.position);
+        cameraFollowObject.LookAt(basket.position);
         if (Input.GetMouseButtonDown(0))
         {
-            mouseStartPos = Input.mousePosition;
-            ballStartPos = transform.position;
+            startPos = Input.mousePosition;
+            posDiff = Vector2.zero;
             if (groundCollider.bounds.size.z / 2.5 > Mathf.Abs(transform.position.z))
             {
                 canShoot = true;
             }
-            else
-            {
-                canShoot = false;
-            }
         }
         if (Input.GetMouseButton(0))
         {
-            mouseEndPos = Input.mousePosition;
-            mousePosDiff = mouseEndPos - mouseStartPos;
-            if (mousePosDiff.x < -(Screen.width / 20f))
+            endPos = Input.mousePosition;
+            posDiff = endPos - startPos;
+            if (posDiff.x < -(Screen.height / 12f))
             {
-                ChangePosition(-moveBall.right, smoothSwipe);
-                ApplyForce(-moveBall.right);
+                ApplyForce(-moveBall.right + moveBall.forward / 7f);
+                canShoot = false;
+            }
+            if (posDiff.x > (Screen.height / 12f))
+            {
+                ApplyForce(moveBall.right + moveBall.forward / 7f);
+                canShoot = false;
 
             }
-            if (mousePosDiff.x > (Screen.width / 20f))
+            if (posDiff.y > (Screen.width / 20f))
             {
-                ChangePosition(moveBall.right, smoothSwipe);
-                ApplyForce(moveBall.right);
+                ApplyForce(moveBall.forward);
             }
-            if (mousePosDiff.y > (Screen.height / 20f))
+            if (posDiff.y < -(Screen.width / 20f))
             {
-                ChangePosition(cameraFollowObject.forward, (smoothSwipe / 2));
-                ApplyForce(cameraFollowObject.forward);
-            }
-            if (mousePosDiff.y < -(Screen.height / 20f))
-            {
-                ChangePosition(-cameraFollowObject.forward, smoothSwipe);
-                ApplyForce(-cameraFollowObject.forward);
+                ApplyForce(-moveBall.forward);
+                canShoot = false;
             }
         }
         if (Input.GetMouseButtonUp(0))
         {
-            float findDiff;
-            findDiff = transform.position.z - ballStartPos.z;
-            if (mousePosDiff.y > (Screen.height / 5f) && canJump && canShoot)
+            ballRb.velocity = ballRb.velocity / 2f;
+            if (posDiff != Vector2.zero && canShoot && canJump)
             {
                 canJump = false;
                 ShootBall();
             }
-            else if (findDiff < (groundCollider.bounds.size.z / 5f) && mousePosDiff.y > (Screen.height / 5f) && canJump)
-            {
-                canJump = false;
-                transform.rotation = Quaternion.AngleAxis(45, Vector3.left);
-                ballRb.AddForce(transform.forward * 5f, ForceMode.Impulse);
-            }
         }
     }
-    private void LateUpdate()
-    {
-        cameraFollowObject.position = new Vector3(moveBall.position.x + followOfset.x, cameraFollowObject.position.y, moveBall.position.z + followOfset.z);
-        moveBall.LookAt(basket.position);
-        cameraFollowObject.LookAt(basket.position);
-    }
-    void ApplyForce(Vector3 getForce)
-    {
-        ballRb.AddForce(getForce * Time.deltaTime, ForceMode.Impulse);
-    }
-    void ChangePosition(Vector3 newPos, float smoothNess)
-    {
-        transform.Translate(newPos * smoothNess * Time.deltaTime, Space.World);
-    }
+
     private void OnCollisionEnter(Collision other)
     {
         if (other.transform.tag == "Ground")
@@ -136,6 +111,11 @@ public class PlayerController : MonoBehaviour
             GameManager.isGameOver = true;
         }
     }
+    void ApplyForce(Vector3 getForce)
+    {
+        ballRb.AddForce(getForce * smoothSwipe * Time.deltaTime, ForceMode.VelocityChange);
+    }
+
     void ShootBall()
     {
         if (Mathf.Abs(basket.transform.position.x - transform.position.x) < 1f && Mathf.Abs(basket.transform.position.z - transform.position.z) < 0.7f)
@@ -161,9 +141,15 @@ public class PlayerController : MonoBehaviour
             float angleBetweenObjects = Vector3.Angle(Vector3.forward, planarTarget - planarPostion) * (p.x > moveBall.position.x ? 1 : -1);
             Vector3 finalVelocity = Quaternion.AngleAxis(angleBetweenObjects, Vector3.up) * velocity;
             // Fire!
+            /*if (ballRb.velocity == null)
+            {
+                finalVelocity = Vector3.up;
+            }*/
             ballRb.velocity = finalVelocity;
+
             // Alternative way:
             //ballRb.AddForce(finalVelocity * ballRb.mass, ForceMode.VelocityChange);
         }
+
     }
 }

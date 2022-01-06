@@ -341,8 +341,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 257652369}
-  m_LocalRotation: {x: 0.056533847, y: 0, z: 0, w: 0.9984007}
-  m_LocalPosition: {x: 0, y: 4.02, z: -20.58}
+  m_LocalRotation: {x: 0.06016238, y: 0, z: 0, w: 0.9981886}
+  m_LocalPosition: {x: 0, y: 4.164, z: -20.58}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1835406638}
@@ -760,8 +760,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.056533847, y: 0, z: 0, w: 0.9984007}
-  m_LocalPosition: {x: 0, y: 4.02, z: -20.58}
+  m_LocalRotation: {x: 0.06016238, y: 0, z: 0, w: 0.9981886}
+  m_LocalPosition: {x: 0, y: 4.164, z: -20.58}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -783,8 +783,8 @@ MonoBehaviour:
   m_ShowCameraFrustum: 1
   m_IgnoreTimeScale: 0
   m_WorldUpOverride: {fileID: 0}
-  m_UpdateMethod: 0
-  m_BlendUpdateMethod: 0
+  m_UpdateMethod: 1
+  m_BlendUpdateMethod: 1
   m_DefaultBlend:
     m_Style: 1
     m_Time: 2
@@ -956,7 +956,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1427369496}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.52, z: -14}
+  m_LocalPosition: {x: 0, y: 2.664, z: -14}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1298,7 +1298,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 43612a042fc35fc4c937f8164d52a948, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.4
+      value: 1.44
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 43612a042fc35fc4c937f8164d52a948, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1370,7 +1370,7 @@ MonoBehaviour:
   moveBall: {fileID: 697634637}
   followOfset: {x: 0, y: 0, z: -1.1}
   groundForce: 5
-  smoothSwipe: 8
+  smoothSwipe: 5
   initialAngle: 75
 --- !u!4 &2046628413 stripped
 Transform:
